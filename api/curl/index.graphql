@@ -1,0 +1,113 @@
+type Aggregations {
+  dataType: DataType1
+  """
+  Field "nutrients" typed as JSON since it has no fields
+  """
+  nutrients: JSON
+}
+
+"""
+Some fields ["SR Legacy", "Survey (FNDDS)"] are not valid GraphQL identifiers and were omitted since the "OmitFields" parameter was used
+"""
+type DataType1 {
+  Branded: Int
+  Foundation: Int
+}
+
+type FoodAttributeTypesEntry {
+  description: String
+  foodAttributes: [FoodAttributes1Entry]
+  id: Int
+  name: String
+}
+
+type FoodAttributes1Entry {
+  id: Int
+  name: String
+  value: Int
+}
+
+type FoodAttributesEntry {
+  id: Int
+  name: String
+  value: Int
+}
+
+type FoodNutrientsEntry {
+  derivationCode: String
+  derivationDescription: String
+  derivationId: Int
+  foodNutrientId: Int
+  foodNutrientSourceCode: Int
+  foodNutrientSourceDescription: String
+  foodNutrientSourceId: Int
+  indentLevel: Int
+  nutrientId: Int
+  nutrientName: String
+  nutrientNumber: Int
+  percentDailyValue: Int
+  rank: Int
+  unitName: String
+  value: Float
+}
+
+type FoodSearchCriteria {
+  dataType: [String]
+  foodTypes: [String]
+  generalSearchInput: String
+  numberOfResultsPerPage: Int
+  pageNumber: Int
+  pageSize: Int
+  query: String
+  requireAllWords: Boolean
+}
+
+type FoodsEntry {
+  allHighlightFields: String
+  brandName: String
+  brandOwner: String
+  dataSource: String
+  dataType: String
+  description: String
+  fdcId: Int
+  finalFoodInputFoods: [JSON]
+  foodAttributeTypes: [FoodAttributeTypesEntry]
+  foodAttributes: [FoodAttributesEntry]
+  foodCategory: String
+  foodMeasures: [JSON]
+  foodNutrients: [FoodNutrientsEntry]
+  foodVersionIds: [JSON]
+  gtinUpc: Float
+  householdServingFullText: String
+  ingredients: String
+  marketCountry: String
+  microbes: [JSON]
+  modifiedDate: Date
+  packageWeight: String
+  publishedDate: Date
+  score: Float
+  servingSize: Int
+  servingSizeUnit: String
+  shortDescription: String
+  subbrandName: String
+  tradeChannels: [String]
+}
+
+type SearchResult {
+  aggregations: Aggregations
+  currentPage: Int
+  foodSearchCriteria: FoodSearchCriteria
+  foods: [FoodsEntry]
+  pageList: [Int]
+  totalHits: Int
+  totalPages: Int
+}
+
+type Query {
+  search(query: String): SearchResult
+    @rest(
+      endpoint: "https://api.nal.usda.gov/fdc/v1/foods/search?api_key=$app_key"
+      headers: [{ name: "accept", value: "application/json" }]
+      configuration: "usda-database"
+    )
+}
