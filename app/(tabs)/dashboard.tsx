@@ -5,24 +5,62 @@ import {
   TextInput,
   Text,
   Button,
+  ActivityIndicator,
 } from "react-native";
 import React from "react";
 import FoodListItem from "@/components/FoodListItem";
 import { useState } from "react";
+import { gql, useLazyQuery } from "@apollo/client";
 
-const foodItems = [
-  { label: "Apple", calories: "50", brand: "generic" },
-  { label: "banana", calories: "20", brand: "generic" },
-  { label: "Pizza", calories: "75", brand: "Dominoes" },
-  { label: "Coffee", calories: "75", brand: "Starbucks" },
-];
+const query = gql`
+  query MyQuery($query: String) {
+    search(query: $query) {
+      foods {
+        brandName
+        description
+        servingSize
+        servingSizeUnit
+        foodNutrients {
+          nutrientId
+          nutrientName
+          unitName
+          value
+        }
+      }
+    }
+  }
+`;
 
 const dashboard = () => {
   const [search, setSearch] = useState("");
 
+  const [runSearch, { data, loading, error }] = useLazyQuery(query);
+
+  const filteredFoods = data?.search?.foods
+    ?.map((food: { foodNutrients: any[] }) => ({
+      ...food,
+      foodNutrients: food.foodNutrients.filter(
+        (nutrient: { nutrientId: number }) => nutrient.nutrientId === 1008
+      ),
+    }))
+    .filter(
+      (food: { foodNutrients: string | any[] }) => food.foodNutrients.length > 0
+    );
+
+  if (error) {
+    console.log("error", error);
+    return <Text>Error</Text>;
+  }
+
+  // [!!!] Keep only foods with nutrientId 1008 ->  kcal
+
   const performSearch = () => {
-    console.warn("searching for items!!!");
-    setSearch("");
+    runSearch({
+      variables: {
+        query: search,
+      },
+    });
+    // setSearch("");
   };
 
   return (
@@ -34,12 +72,15 @@ const dashboard = () => {
         style={styles.input}
       />
       {search && <Button title="Search" onPress={performSearch} />}
-
-      <FlatList
-        data={foodItems}
-        renderItem={({ item }) => <FoodListItem item={item} />}
-        contentContainerStyle={{ gap: 5 }}
-      ></FlatList>
+      {loading && <ActivityIndicator />}
+      {!loading && (
+        <FlatList
+          data={filteredFoods}
+          renderItem={({ item }) => <FoodListItem item={item} />}
+          ListEmptyComponent={() => <Text>Search for Something!</Text>}
+          contentContainerStyle={{ gap: 5 }}
+        ></FlatList>
+      )}
     </SafeAreaView>
   );
 };

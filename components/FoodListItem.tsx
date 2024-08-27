@@ -6,9 +6,11 @@ const FoodListItem = ({ item }) => {
   return (
     <View style={styles.container}>
       <View style={{ flex: 1, gap: 5 }}>
-        <Text style={{ fontWeight: "bold", fontSize: 16 }}>{item.label}</Text>
+        <Text style={{ fontWeight: "bold", fontSize: 16 }}>
+          {item.description}
+        </Text>
         <Text style={{ color: "dimgray" }}>
-          {item.calories} cal, {item.brand}
+          {item.foodNutrients[0].value} cal, {item.brandName || "generic"}
         </Text>
       </View>
       <Feather name="plus-square" size={33} color="royalblue" />
