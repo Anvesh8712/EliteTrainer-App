@@ -31,7 +31,7 @@ const query = gql`
   }
 `;
 
-const dashboard = () => {
+const Search = () => {
   const [search, setSearch] = useState("");
 
   const [runSearch, { data, loading, error }] = useLazyQuery(query);
@@ -65,6 +65,7 @@ const dashboard = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Text>Add Food</Text>
       <TextInput
         value={search}
         onChangeText={setSearch}
@@ -99,4 +100,4 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
 });
-export default dashboard;
+export default Search;
