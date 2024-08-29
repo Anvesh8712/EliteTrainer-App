@@ -11,6 +11,7 @@ import React from "react";
 import FoodListItem from "@/components/FoodListItem";
 import { useState } from "react";
 import { gql, useLazyQuery } from "@apollo/client";
+import { useRouter, useLocalSearchParams } from "expo-router";
 
 const query = gql`
   query MyQuery($query: String) {
@@ -34,6 +35,8 @@ const query = gql`
 
 const Search = () => {
   const [search, setSearch] = useState("");
+
+  const mealType = useLocalSearchParams();
 
   const [runSearch, { data, loading, error }] = useLazyQuery(query);
 
@@ -78,7 +81,13 @@ const Search = () => {
       {!loading && (
         <FlatList
           data={filteredFoods}
-          renderItem={({ item }) => <FoodListItem item={item} />}
+          renderItem={({ item }) => (
+            <FoodListItem
+              item={item}
+              mealType={mealType}
+              isHomeScreen={false}
+            />
+          )}
           ListEmptyComponent={() => <Text>Search for Something!</Text>}
           contentContainerStyle={{ gap: 5 }}
         ></FlatList>
