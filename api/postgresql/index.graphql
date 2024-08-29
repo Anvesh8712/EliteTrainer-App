@@ -1,0 +1,96 @@
+type Food_log {
+  created_at: DateTime
+  day_eaten: Date
+  food_id: Int!
+  food_name: String!
+  id: Int!
+  kcal: Int!
+  meal_type: String!
+  user_id: Int!
+}
+
+"""
+The following queries are just a set of examples of how to access your schema.
+Feel free to modify them or aggregate more.
+"""
+type Query {
+  " Queries for type 'Food_log' "
+  food_logByFood_id(food_id: ID!): [Food_log]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "food_log"
+      configuration: "postgresql_config"
+    )
+
+  foodLogs(user_id: Int!): [Food_log]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "food_log"
+      configuration: "postgresql_config"
+    )
+
+  food_logByUser_idAndDay_eaten(user_id: Int!, day_eaten: Date!): [Food_log]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "food_log"
+      configuration: "postgresql_config"
+    )
+  food_logList: [Food_log]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "food_log"
+      configuration: "postgresql_config"
+    )
+  food_logPaginatedList(first: Int, after: Int): [Food_log]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      query: """
+      SELECT "created_at", "day_eaten", "food_id", "food_name", "id", "kcal", "meal_type", "user_id" FROM "food_log" LIMIT $1 OFFSET $2
+      """
+      configuration: "postgresql_config"
+    )
+}
+
+"""
+The following mutations are just a set of examples of how to access your schema.
+Feel free to modify them or aggregate more.
+"""
+type Mutation {
+  " Mutations for type 'Food_log' "
+  deleteFood_log(
+    food_id: Int!
+    day_eaten: Date
+    user_id: Int!
+    id: Int!
+    meal_type: String!
+    created_at: DateTime!
+    kcal: Int!
+    food_name: String!
+  ): Food_log
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "food_log"
+      dml: DELETE
+      configuration: "postgresql_config"
+    )
+  insertFood_log(
+    food_id: Int!
+    user_id: Int!
+    meal_type: String!
+    kcal: Int!
+    food_name: String!
+  ): Food_log
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "food_log"
+      dml: INSERT
+      configuration: "postgresql_config"
+    )
+}

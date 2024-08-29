@@ -16,6 +16,7 @@ const query = gql`
   query MyQuery($query: String) {
     search(query: $query) {
       foods {
+        fdcId
         brandName
         description
         servingSize

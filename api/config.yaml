@@ -1,4 +1,7 @@
 configurationset:
   - configuration:
+      name: postgresql_config
+      uri: postgresql://ep-broad-voice-a5700xvh.us-east-2.aws.neon.tech/neondb?user=neondb_owner&password=0jrq6QakGOMJ
+  - configuration:
       name: usda-database
       app_key: OnZ5hPM92KTBlwkVU76ehnfpwq1ySYreHO5XEs6T
