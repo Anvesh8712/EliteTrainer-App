@@ -36,7 +36,7 @@ const query = gql`
 const Search = () => {
   const [search, setSearch] = useState("");
 
-  const mealType = useLocalSearchParams();
+  const { mealType, selectedDate } = useLocalSearchParams();
 
   const [runSearch, { data, loading, error }] = useLazyQuery(query);
 
@@ -85,7 +85,9 @@ const Search = () => {
             <FoodListItem
               item={item}
               mealType={mealType}
+              selectedDate={selectedDate}
               isHomeScreen={false}
+              id={item.id}
             />
           )}
           ListEmptyComponent={() => <Text>Search for Something!</Text>}

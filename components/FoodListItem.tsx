@@ -105,6 +105,7 @@ const mutation = gql`
     $kcal: Int!
     $meal_type: String!
     $user_id: Int!
+    $day_eaten: Date!
   ) {
     insertFood_log(
       food_id: $food_id
@@ -112,6 +113,7 @@ const mutation = gql`
       kcal: $kcal
       meal_type: $meal_type
       user_id: $user_id
+      day_eaten: $day_eaten
     ) {
       created_at
       day_eaten
@@ -125,12 +127,25 @@ const mutation = gql`
   }
 `;
 
+const deleteMutation = gql`
+  mutation DeleteFoodLog($id: Int!) {
+    deleteFood_log(id: $id) {
+      id
+    }
+  }
+`;
+
 // @ts-ignore
-const FoodListItem = ({ item, mealType, isHomeScreen }) => {
+const FoodListItem = ({ item, mealType, isHomeScreen, id, selectedDate }) => {
   const [logFood, { data, loading, error }] = useMutation(mutation, {
     refetchQueries: ["food_logByUser_idAndDay_eaten"],
   });
   const router = useRouter();
+
+  const [deleteFood, { loading: deleteLoading, error: deleteError }] =
+    useMutation(deleteMutation, {
+      refetchQueries: ["food_logByUser_idAndDay_eaten"],
+    });
 
   const onPlusPresses = () => {
     logFood({
@@ -140,9 +155,16 @@ const FoodListItem = ({ item, mealType, isHomeScreen }) => {
         kcal: item.foodNutrients[0].value,
         meal_type: mealType,
         user_id: 2, // Replace with dynamic user ID if needed
+        day_eaten: selectedDate, // Include the selected date
       },
     });
     router.back();
+  };
+
+  const onMinusPresses = () => {
+    deleteFood({
+      variables: { id },
+    });
   };
 
   return (
@@ -156,7 +178,12 @@ const FoodListItem = ({ item, mealType, isHomeScreen }) => {
         </Text>
       </View>
       {isHomeScreen ? (
-        <AntDesign name="minussquareo" size={24} color="red" />
+        <AntDesign
+          name="minussquareo"
+          size={24}
+          color="red"
+          onPress={onMinusPresses}
+        />
       ) : (
         <Feather
           name="plus-square"

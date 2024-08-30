@@ -62,16 +62,7 @@ Feel free to modify them or aggregate more.
 """
 type Mutation {
   " Mutations for type 'Food_log' "
-  deleteFood_log(
-    food_id: Int!
-    day_eaten: Date
-    user_id: Int!
-    id: Int!
-    meal_type: String!
-    created_at: DateTime!
-    kcal: Int!
-    food_name: String!
-  ): Food_log
+  deleteFood_log(id: Int!): Food_log
     @dbquery(
       type: "postgresql"
       schema: "public"
@@ -85,6 +76,7 @@ type Mutation {
     meal_type: String!
     kcal: Int!
     food_name: String!
+    day_eaten: Date!
   ): Food_log
     @dbquery(
       type: "postgresql"

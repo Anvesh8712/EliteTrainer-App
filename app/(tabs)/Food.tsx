@@ -247,6 +247,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 const query = gql`
   query food_logByUser_idAndDay_eaten($user_id: Int!, $day_eaten: Date!) {
     food_logByUser_idAndDay_eaten(user_id: $user_id, day_eaten: $day_eaten) {
+      id
       food_id
       food_name
       kcal
@@ -307,13 +308,19 @@ const HomeScreen = () => {
       let totalCalories = 0;
 
       data.food_logByUser_idAndDay_eaten.forEach(
-        (item: { meal_type: string; kcal: number; food_name: any }) => {
+        (item: {
+          meal_type: string;
+          kcal: number;
+          food_name: any;
+          id: number;
+        }) => {
           const mealType = item.meal_type.toLowerCase();
 
           if (isMealType(mealType)) {
             meals[mealType].push({
               foodNutrients: [{ value: item.kcal }],
               description: item.food_name,
+              id: item.id,
             });
             totalCalories += item.kcal;
           }
@@ -370,11 +377,19 @@ const HomeScreen = () => {
           item={item}
           mealType={mealType}
           isHomeScreen={true}
+          selectedDate={selectedDate.toISOString().slice(0, 10)}
+          id={item.id}
         />
       ))}
 
       <Link
-        href={{ pathname: "/Search", params: { mealType } }}
+        href={{
+          pathname: "/Search",
+          params: {
+            mealType,
+            selectedDate: selectedDate.toISOString().slice(0, 10),
+          },
+        }}
         style={styles.addFoodLink}
       >
         Add Food
