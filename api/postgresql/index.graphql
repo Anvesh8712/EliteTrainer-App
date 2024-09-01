@@ -38,6 +38,14 @@ type Query {
       table: "food_log"
       configuration: "postgresql_config"
     )
+
+  food_logByUser_idAndMeal_type(user_id: Int!, meal_type: String!): [Food_log]
+    @dbquery(
+      type: "postgresql"
+      schema: "public"
+      table: "food_log"
+      configuration: "postgresql_config"
+    )
   food_logList: [Food_log]
     @dbquery(
       type: "postgresql"

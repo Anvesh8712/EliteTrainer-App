@@ -11,13 +11,14 @@ import {
 } from "react-native";
 import React from "react";
 import FoodListItem from "@/components/FoodListItem";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import { useLocalSearchParams } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
 import { useRouter } from "expo-router";
+import RecentMeals from "@/components/RecentMeals";
 
 const query = gql`
   query MyQuery($query: String) {
@@ -72,6 +73,8 @@ const Search = () => {
   const [search, setSearch] = useState("");
   const [scannerEnabled, setScannerEnabled] = useState(false);
   const router = useRouter();
+
+  const user_id = 2;
 
   const [permission, requestPermission] = useCameraPermissions();
   const [facing, setFacing] = useState<CameraType>("back");
@@ -231,7 +234,7 @@ const Search = () => {
 
       {search && <Button title="Search" onPress={performSearch} />}
       {loading && <ActivityIndicator />}
-      {!loading && (
+      {search && !loading && (
         <FlatList
           data={filteredFoods}
           renderItem={({ item }) => (
@@ -246,6 +249,13 @@ const Search = () => {
           ListEmptyComponent={() => <Text>Search for Something!</Text>}
           contentContainerStyle={{ gap: 5 }}
         ></FlatList>
+      )}
+      {!search && (
+        <RecentMeals
+          user_id={user_id}
+          mealType={mealType}
+          selectedDate={selectedDate}
+        />
       )}
     </SafeAreaView>
   );
