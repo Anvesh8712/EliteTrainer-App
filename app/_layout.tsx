@@ -107,7 +107,20 @@ export default function RootLayout() {
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
           {/* Place your Search screen here outside of the tabs */}
-          <Stack.Screen name="Search" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="Search"
+            options={{
+              headerTitle: "Search Foods", // Set the title for the header
+              headerStyle: {
+                backgroundColor: colorScheme === "dark" ? "#000" : "#fff", // Customize the header background color
+              },
+              headerTitleStyle: {
+                fontWeight: "bold", // Customize the header title style
+                color: colorScheme === "dark" ? "#fff" : "#000", // Customize the header title color
+              },
+              headerBackTitleVisible: false, // Remove the (tabs) text next to the back button
+            }}
+          />
 
           <Stack.Screen name="+not-found" />
         </Stack>

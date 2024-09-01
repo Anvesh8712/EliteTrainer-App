@@ -214,8 +214,14 @@ const Search = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text>Add Food</Text>
-      <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: 10,
+          marginTop: 20,
+        }}
+      >
         <TextInput
           value={search}
           onChangeText={setSearch}
